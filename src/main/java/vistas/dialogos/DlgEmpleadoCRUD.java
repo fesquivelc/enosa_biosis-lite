@@ -6,6 +6,7 @@
 package vistas.dialogos;
 
 import com.personal.utiles.FormularioUtil;
+import controladores.AsignacionAreaControlador;
 import controladores.Controlador;
 import controladores.DepartamentoControlador;
 import controladores.EmpleadoControlador;
@@ -16,6 +17,7 @@ import controladores.TipoContratoControlador;
 import controladores.TipoDocumentoControlador;
 import controladores.TipoViaControlador;
 import controladores.TipoZonaControlador;
+import entidades.escalafon.AsignacionArea;
 import entidades.escalafon.Departamento;
 import entidades.escalafon.Empleado;
 import entidades.escalafon.FichaGeneral;
@@ -30,6 +32,8 @@ import entidades.escalafon.TipoVia;
 import entidades.escalafon.TipoZona;
 import entidades.escalafon.Ubigeo;
 import java.awt.Component;
+import java.awt.geom.Area;
+import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
@@ -153,6 +157,8 @@ public class DlgEmpleadoCRUD extends javax.swing.JDialog {
         jLabel22 = new javax.swing.JLabel();
         txtCodigoTrabajador = new javax.swing.JTextField();
         cboSituacionEmpleado = new javax.swing.JComboBox();
+        dlgAsignacionArea = new javax.swing.JButton();
+        txtArea = new javax.swing.JTextField();
 
         setTitle("DATOS DE EMPLEADO");
         setResizable(false);
@@ -506,7 +512,7 @@ public class DlgEmpleadoCRUD extends javax.swing.JDialog {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
+        gridBagConstraints.insets = new java.awt.Insets(5, 4, 5, 0);
         jPanel5.add(cboOficina, gridBagConstraints);
 
         jLabel17.setText("Código de planilla:");
@@ -595,6 +601,29 @@ public class DlgEmpleadoCRUD extends javax.swing.JDialog {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         jPanel5.add(cboSituacionEmpleado, gridBagConstraints);
 
+        dlgAsignacionArea.setText("Asignacion Area");
+        dlgAsignacionArea.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dlgAsignacionAreaActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
+        jPanel5.add(dlgAsignacionArea, gridBagConstraints);
+
+        txtArea.setPreferredSize(new java.awt.Dimension(80, 20));
+        txtArea.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAreaActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        jPanel5.add(txtArea, gridBagConstraints);
+
         pnlLaborales.setViewportView(jPanel5);
 
         jTabbedPane1.addTab("Datos laborales", pnlLaborales);
@@ -640,6 +669,19 @@ public class DlgEmpleadoCRUD extends javax.swing.JDialog {
         guardar();
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void dlgAsignacionAreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dlgAsignacionAreaActionPerformed
+        // TODO add your handling code here:
+        
+        DlgAsignacionArea dlgAA = new DlgAsignacionArea(this);
+        asignacionSeleccion = dlgAA.getSeleccionado();
+        mostrarArea(asignacionSeleccion);
+    }//GEN-LAST:event_dlgAsignacionAreaActionPerformed
+
+    private void txtAreaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAreaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAreaActionPerformed
+    
+    private AsignacionArea asignacionSeleccion;
     private Ubigeo ubigeoSeleccion;
     private Nacionalidad nacionalidadSeleccion;
     private Empleado empleadoSeleccionado;
@@ -658,6 +700,7 @@ public class DlgEmpleadoCRUD extends javax.swing.JDialog {
     private javax.swing.JComboBox cboTipoZona;
     private com.toedter.calendar.JDateChooser dcFechaInicio;
     private com.toedter.calendar.JDateChooser dcFechaNacimiento;
+    private javax.swing.JButton dlgAsignacionArea;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
@@ -692,6 +735,7 @@ public class DlgEmpleadoCRUD extends javax.swing.JDialog {
     private javax.swing.JScrollPane pnlGenerales;
     private javax.swing.JScrollPane pnlLaborales;
     private javax.swing.JPanel pnlNavegacion;
+    private javax.swing.JTextField txtArea;
     private javax.swing.JTextField txtCodigoTrabajador;
     private javax.swing.JTextField txtDireccion;
     private javax.swing.JTextField txtEmail;
@@ -816,9 +860,38 @@ public class DlgEmpleadoCRUD extends javax.swing.JDialog {
     private void mostrarUbigeo(Ubigeo seleccionado) {
         this.txtUbigeo.setText(seleccionado == null ? "" : String.format("%s / %s / %s", seleccionado.getDepartamento(), seleccionado.getProvincia(), seleccionado.getDistrito()));
     }
+    
+    private void mostrarArea(AsignacionArea seleccionado){
+        this.txtArea.setText(seleccionado == null? "" : String.format("%s", seleccionado.getArea()));
+    }
+    
+    AsignacionAreaControlador asignacionControl = new AsignacionAreaControlador();
 
     private void guardar() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(accion == Controlador.NUEVO){
+            Date fechaInicio = new Date();
+            asignacionControl.getSeleccionado().setFechaInicio(fechaInicio);
+            asignacionControl.getSeleccionado().setVigente(true);
+            asignacionControl.getSeleccionado().setArea((Departamento)cboOficina.getSelectedItem());
+            asignacionControl.getSeleccionado().setEmpleado(empleado);
+            
+        }else if(accion == Controlador.MODIFICAR){
+            
+            Date fechaInicioFinCambio = new Date();
+                        
+            asignacionControl.getSeleccionado().setFechaFin(fechaInicioFinCambio);
+            asignacionControl.getSeleccionado().setVigente(false);
+            
+            AsignacionArea nuevoCambio = new AsignacionArea();
+            asignacionControl.setSeleccionado(nuevoCambio);
+            
+            asignacionControl.getSeleccionado().setFechaInicio(fechaInicioFinCambio);
+            asignacionControl.getSeleccionado().setVigente(true);
+            asignacionControl.getSeleccionado().setArea((Departamento)cboOficina.getSelectedItem());
+            asignacionControl.getSeleccionado().setEmpleado(empleado);
+            
+            
+        }
     }
 
     private void mostrarDatos(Empleado empleado) {
@@ -872,7 +945,8 @@ public class DlgEmpleadoCRUD extends javax.swing.JDialog {
         
         //DATOS FICHA LABORAL
         FichaLaboral laboral = empleado.getFichaLaboral();
-        cboOficina.setSelectedItem(laboral.getArea());
+        AsignacionArea area =  asignacionControl.buscarXEmpleado(empleado).get(0);
+        cboOficina.setSelectedItem(area.getArea());
         txtCodigoTrabajador.setText(laboral.getCodigoTrabajador() == null ? "" : laboral.getCodigoTrabajador());
         cboTipoContrato.setSelectedItem(laboral.getTiṕoContrato());
         cboRegimenLaboral.setSelectedItem(laboral.getRegimenLaboral());

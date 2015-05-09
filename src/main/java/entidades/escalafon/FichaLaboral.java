@@ -28,9 +28,9 @@ public class FichaLaboral implements Serializable {
     @ManyToOne(targetEntity = TipoContrato.class)
     @JoinColumn(name="tipo_contrato_codigo",referencedColumnName="codigo")
     private TipoContrato tiṕoContrato;
-    @ManyToOne(targetEntity = Departamento.class)
-    @JoinColumn(name="area_codigo",referencedColumnName="codigo",nullable=false)
-    private Departamento area;
+//    @ManyToOne(targetEntity = Departamento.class)
+//    @JoinColumn(name="area_codigo",referencedColumnName="codigo",nullable=false)
+//    private Departamento area;
     @ManyToOne(targetEntity = SituacionTrabajador.class)
     @JoinColumn(name="situacion_trabajador_codigo",referencedColumnName="codigo")
     private SituacionTrabajador situacionTrabajador;
@@ -73,13 +73,13 @@ public class FichaLaboral implements Serializable {
         this.tiṕoContrato = tiṕoContrato;
     }
    
-    public Departamento getArea() {
-        return this.area;
-    }
-
-    public void setArea(Departamento area) {
-        this.area = area;
-    }
+//    public Departamento getArea() {
+//        return this.area;
+//    }
+//
+//    public void setArea(Departamento area) {
+//        this.area = area;
+//    }
    
     public SituacionTrabajador getSituacionTrabajador() {
         return this.situacionTrabajador;

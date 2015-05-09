@@ -6,6 +6,8 @@
 package vistas.dialogos;
 
 import com.personal.utiles.FormularioUtil;
+import controladores.AsignacionAreaControlador;
+import entidades.escalafon.AsignacionArea;
 import entidades.escalafon.Empleado;
 import java.util.Date;
 import javax.swing.JDialog;
@@ -23,6 +25,7 @@ public class DlgDatosEmpleado extends javax.swing.JDialog {
      * Creates new form DlgDatosEmpleado
      */
     private Empleado empleado;
+    private AsignacionArea area;
 
     public Empleado getEmpleado() {
         return empleado;
@@ -30,6 +33,8 @@ public class DlgDatosEmpleado extends javax.swing.JDialog {
 
     public void setEmpleado(Empleado empleado) {
         this.empleado = empleado;
+        AsignacionAreaControlador aac = new AsignacionAreaControlador();
+        this.area =  aac.buscarXEmpleado(empleado).get(0);
         actualizarControles();
     }
     
@@ -371,7 +376,7 @@ public class DlgDatosEmpleado extends javax.swing.JDialog {
         txtRegimenLaboral.setText(empleado.getFichaLaboral().getRegimenLaboral().getNombre());
         dtFechaContrato.setDate(empleado.getFichaLaboral().getFechaInicio());
         txtCodigoModular.setText(empleado.getFichaLaboral().getCodigoTrabajador());
-        txtArea.setText(empleado.getFichaLaboral().getArea() == null ? "" : empleado.getFichaLaboral().getArea().getNombre());
+        txtArea.setText(area.getArea() == null ? "" : area.getArea().getNombre());
         
     }
 }
